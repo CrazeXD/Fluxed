@@ -27,23 +27,13 @@ class Distribution:
         if not callable(self.func):
             raise TypeError(f"{self.name} must be a callable function.")
 
-    def __call__(self, *coords):
+    def __call__(self, *args, **kwargs):
         """
-        Calculates the intensity value at the given N-dimensional coordinates.
-
-        Args:
-            *coords: Variable number of arguments representing coordinates (x, y, z, ...).
-                     The number of coordinates must match the number of parameters of func.
-
-        Returns:
-            float: The intensity value at the given coordinates.
+        Call the distribution function with the provided arguments.
+        This method allows both positional and keyword arguments to be passed
+        to the underlying numpy-compatible function.
         """
-        if len(coords) != len(self.vars):
-            raise ValueError(
-                f"Distribution '{self.name}' expects {len(self.vars)} parameters, "
-                f"but {len(coords)} were provided."
-            )
-        return float(self.func(*coords))
+        return self.func(*args, **kwargs)
 
     def __str__(self):
         return f"Distribution(name='{self.name}', vars={self.vars})"
@@ -86,12 +76,17 @@ class NormalDistribution2D(Distribution):
 
 class UniformDistribution(Distribution):
     """
-    Uniform distribution in 1D.
+    Uniform distribution in Nd.
     """
 
     def __init__(self, value: float = 1.0):
-        def uniform_func(x) -> float:
-            return value
+        def uniform_func(*args) -> float:
+            if args and isinstance(args[0], np.ndarray):
+                # Return a new array of the same shape as the input, filled with `value`.
+                return np.full_like(args[0], fill_value=value, dtype=float)
+            else:
+                # Otherwise, we are in a scalar context, so just return the value.
+                return value
 
         super().__init__("UniformDistribution", uniform_func)
         self.value = value
