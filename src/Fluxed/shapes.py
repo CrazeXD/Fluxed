@@ -205,7 +205,7 @@ class NdShape:
             # Test if function supports vectorized input by passing small arrays
             test_inputs = [np.array([1.0, 2.0], dtype=float)
                            for _ in range(num_dims)]
-            test_output = distribution.func(*test_inputs)
+            test_output = distribution(*test_inputs)
 
             if isinstance(test_output, np.ndarray) and test_output.shape == (2,):
                 # If it supports, flatten meshgrid coordinates and apply once
