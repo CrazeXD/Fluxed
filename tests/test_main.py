@@ -1,5 +1,3 @@
-# tests/test_fluxed_behavior.py
-
 import pytest
 import numpy as np
 
