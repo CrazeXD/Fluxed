@@ -2,7 +2,6 @@
 
 [![PyPI Version](https://img.shields.io/pypi/v/Fluxed.svg?style=flat-square)](https://pypi.org/project/Fluxed/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
-[![Build Status](https://github.com/CrazeXD/Fluxed/actions/workflows/tests.yml/badge.svg)](https://github.com/CrazeXD/Fluxed/actions)
 
 **Fluxed** is a Python package for defining N-dimensional shapes and computing the flux of arbitrary intensity distributions through them. It features a powerful tool to numerically find distribution parameters that match a desired flux value, enabling comparisons across different geometries and distributions.
 
