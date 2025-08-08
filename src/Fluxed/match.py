@@ -16,7 +16,7 @@ def match_flux_parameters(
     source_coords_arrays: tuple = (),
     target_coords_arrays: tuple = (),
     bounds: list[tuple] = None,
-    optimizer_options: dict = None
+    optimizer_options: dict = None,
 ) -> dict:
     """
     Computes the parameters for a new distribution on a target shape such that
@@ -51,25 +51,25 @@ def match_flux_parameters(
               - 'final_flux' (float): The flux achieved with the optimal parameters.
               - 'target_flux' (float): The original target flux.
     """
-    # --- Step 1: Calculate the target flux. This is a constant. ---
-    print(
-        f"Calculating target flux from source shape and {source_dist.name}...")
+    # Calculate the target flux. This is a constant.
+    print(f"Calculating target flux from source shape and {source_dist.name}...")
     target_flux = source_shape.get_flux(source_dist, *source_coords_arrays)
     print(f"Target Flux = {target_flux:.4f}")
 
     if not target_shape.is_closed:
         warnings.warn(
-            "Target shape is not closed. Flux matching is not possible. Returning failure.")
+            "Target shape is not closed. Flux matching is not possible. Returning failure."
+        )
         return {
-            'success': False,
-            'message': 'Target shape is not closed.',
-            'parameters': None,
-            'final_flux': 0.0,
-            'target_flux': target_flux
+            "success": False,
+            "message": "Target shape is not closed.",
+            "parameters": None,
+            "final_flux": 0.0,
+            "target_flux": target_flux,
         }
 
-    # --- Step 2: Define the objective function for the optimizer. ---
-    # This function takes a vector of parameters `p` and returns the squared error.
+    # Define the objective function for the optimizer
+    # This function takes a vector of parameters 'p' and returns the squared error.
     # It uses a closure to "remember" the other necessary variables.
     def objective_function(p: np.ndarray) -> float:
         # Create a dictionary mapping parameter names to their current guessed values
@@ -81,34 +81,31 @@ def match_flux_parameters(
         except Exception as e:
             # If the parameters are invalid (e.g., stddev=0), return a large error
             warnings.warn(
-                f"Could not instantiate {TargetDistClass.__name__} with params {params_dict}: {e}")
+                f"Could not instantiate {TargetDistClass.__name__} with params {params_dict}: {e}"
+            )
             return 1e12  # Return a large penalty
 
         # Calculate the flux for this new distribution
-        current_flux = target_shape.get_flux(
-            current_dist, *target_coords_arrays)
+        current_flux = target_shape.get_flux(current_dist, *target_coords_arrays)
 
         # Calculate and return the squared difference
-        error = (current_flux - target_flux)**2
+        error = (current_flux - target_flux) ** 2
         return error
 
-    # --- Step 3: Run the optimizer. ---
-    print(
-        f"\nOptimizing parameters {param_names} for {TargetDistClass.__name__}...")
+    # Run the optimizer
+    print(f"\nOptimizing parameters {param_names} for {TargetDistClass.__name__}...")
 
-    # Use Nelder-Mead as a robust, derivative-free default method.
-    # Other good choices: 'L-BFGS-B' (if bounds are used), 'Powell'.
-    method = 'L-BFGS-B' if bounds else 'Nelder-Mead'
+    method = "L-BFGS-B" if bounds else "Nelder-Mead"
 
     result = minimize(
         fun=objective_function,
         x0=np.array(initial_guess),
         method=method,
         bounds=bounds,
-        options=optimizer_options
+        options=optimizer_options,
     )
 
-    # --- Step 4: Format and return the result. ---
+    # Format and return the result
     if result.success:
         print("Optimization successful!")
     else:
@@ -119,9 +116,9 @@ def match_flux_parameters(
     final_flux = target_shape.get_flux(final_dist, *target_coords_arrays)
 
     return {
-        'success': result.success,
-        'message': result.message,
-        'parameters': final_params,
-        'final_flux': final_flux,
-        'target_flux': target_flux
+        "success": result.success,
+        "message": result.message,
+        "parameters": final_params,
+        "final_flux": final_flux,
+        "target_flux": target_flux,
     }

@@ -20,7 +20,7 @@ class Distribution:
         self.name: str = name
         self.func: callable = func
         # Get parameter names from the function signature
-        self.vars = func.__code__.co_varnames[:func.__code__.co_argcount]
+        self.vars = func.__code__.co_varnames[: func.__code__.co_argcount]
         self._validate()
 
     def _validate(self):
@@ -49,8 +49,9 @@ class NormalDistribution1D(Distribution):
 
     def __init__(self, mean: float = 0.0, stddev: float = 1.0):
         def normal_func(x):
-            return (1 / (stddev * np.sqrt(2 * np.pi))) * \
-                np.exp(-0.5 * ((x - mean) / stddev) ** 2)
+            return (1 / (stddev * np.sqrt(2 * np.pi))) * np.exp(
+                -0.5 * ((x - mean) / stddev) ** 2
+            )
 
         super().__init__("NormalDistribution1D", normal_func)
         self.mean = mean
@@ -62,10 +63,17 @@ class NormalDistribution2D(Distribution):
     Normal distribution in 2D.
     """
 
-    def __init__(self, mean_x: float = 0.0, mean_y: float = 0.0, stddev_x: float = 1.0, stddev_y: float = 1.0):
+    def __init__(
+        self,
+        mean_x: float = 0.0,
+        mean_y: float = 0.0,
+        stddev_x: float = 1.0,
+        stddev_y: float = 1.0,
+    ):
         def normal_func(x, y):
-            return (1 / (2 * np.pi * stddev_x * stddev_y)) * np.exp(-0.5 *
-                                                                    (((x - mean_x) / stddev_x) ** 2 + ((y - mean_y) / stddev_y) ** 2))
+            return (1 / (2 * np.pi * stddev_x * stddev_y)) * np.exp(
+                -0.5 * (((x - mean_x) / stddev_x) ** 2 + ((y - mean_y) / stddev_y) ** 2)
+            )
 
         super().__init__("NormalDistribution2D", normal_func)
         self.mean_x = mean_x
@@ -97,7 +105,9 @@ class LinearDistribution1D(Distribution):
     Linear distribution in 1D.
     """
 
-    def __init__(self, slope: float = 1.0, intercept: float = 0.0, domain: tuple = (0.0, 1.0)):
+    def __init__(
+        self, slope: float = 1.0, intercept: float = 0.0, domain: tuple = (0.0, 1.0)
+    ):
         def linear_func(x) -> float:
             return slope * x + intercept
 
@@ -112,7 +122,14 @@ class LinearDistribution2D(Distribution):
     Linear distribution in 2D.
     """
 
-    def __init__(self, slope_x: float = 1.0, slope_y: float = 1.0, intercept_x: float = 0.0, intercept_y: float = 0.0, domain: tuple = ((0.0, 1.0), (0.0, 1.0))):
+    def __init__(
+        self,
+        slope_x: float = 1.0,
+        slope_y: float = 1.0,
+        intercept_x: float = 0.0,
+        intercept_y: float = 0.0,
+        domain: tuple = ((0.0, 1.0), (0.0, 1.0)),
+    ):
         def linear_func(x, y) -> float:
             return slope_x * x + slope_y * y + intercept_x + intercept_y
 
@@ -143,10 +160,14 @@ class ExponentialDistribution2D(Distribution):
     Exponential distribution in 2D.
     """
 
-    def __init__(self, rate_x: float = 1.0, rate_y: float = 1.0, domain: tuple = ((0.0, 1.0), (0.0, 1.0))):
+    def __init__(
+        self,
+        rate_x: float = 1.0,
+        rate_y: float = 1.0,
+        domain: tuple = ((0.0, 1.0), (0.0, 1.0)),
+    ):
         def exponential_func(x, y) -> float:
-            return rate_x * np.exp(-rate_x * x) * \
-                rate_y * np.exp(-rate_y * y)
+            return rate_x * np.exp(-rate_x * x) * rate_y * np.exp(-rate_y * y)
 
         super().__init__("ExponentialDistribution2D", exponential_func)
         self.rate_x = rate_x

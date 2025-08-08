@@ -2,7 +2,7 @@
 name = "Fluxed"
 description = "A Python library for simulating and analyzing fluxes in complex systems."
 authors = [{name = "Rishabh Garg", email = "rishabh@rishabhgarg.dev"}]
-version = "0.2.0"
+version = "1.0.0"
 license = "GPL-3.0-or-later"
 readme = "README.md"
 license-files = ["LICENSE"]
